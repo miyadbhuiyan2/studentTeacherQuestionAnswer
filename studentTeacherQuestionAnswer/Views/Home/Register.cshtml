@@ -1,0 +1,90 @@
+﻿@model studentTeacherQuestionAnswer.Models.UserInfo
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+<h1>Register</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailId" class="control-label">Email</label>
+                <input asp-for="EmailId" class="form-control" required />
+                <span asp-validation-for="EmailId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" required />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserType" class="control-label">User Type</label>
+                <br />
+                <div class="form-check">
+                    <input asp-for="UserType" value="Student" class="form-check-input" type="radio" onclick="userTypeCheck();" id="student" checked>
+                    <label class="form-check-label" for="flexRadioDefault1">Student</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="UserType" value="Teacher" class="form-check-input" type="radio" onclick="userTypeCheck();" id="teacher">
+                    <label class="form-check-label" for="flexRadioDefault2">Teacher</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdcardNo" class="control-label" id="idCardNolabel">ID Card No</label>
+                <input asp-for="IdcardNo" class="form-control" id="idCardNoText" required />
+                <span asp-validation-for="IdcardNo" class="text-danger" id="idCardNoValid"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstituteName" class="control-label" id="instituteNameLabel">Institute Name</label>
+                <input asp-for="InstituteName" class="form-control" id="instituteNameText" required/>
+                <span asp-validation-for="InstituteName" class="text-danger" id="instituteNameValid"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Register" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div>
+        <a asp-action="Login">Back to Login</a>
+    </div>
+</div>
+
+<script src="d:\asp core 6\studentteacherquestionanswer\studentteacherquestionanswer\wwwroot\lib\jquery\dist\jquery.min.js"></script>
+<script type="text/javascript">
+
+    function userTypeCheck() {
+        if (document.getElementById('student').checked) {
+            document.getElementById('idCardNolabel').style.display = 'block';
+            document.getElementById('idCardNoText').style.display = 'block';
+            document.getElementById('idCardNoValid').style.display = 'block';
+            document.getElementById('instituteNameLabel').style.display = 'block';
+            document.getElementById('instituteNameText').style.display = 'block';
+            document.getElementById('instituteNameValid').style.display = 'block';
+
+            document.getElementById('idCardNoText').setAttribute('required', 'required');
+            document.getElementById('instituteNameText').setAttribute('required', 'required');
+        } else {
+            document.getElementById('idCardNolabel').style.display = 'none';
+            document.getElementById('idCardNoText').style.display = 'none';
+            document.getElementById('idCardNoValid').style.display = 'none';
+            document.getElementById('instituteNameLabel').style.display = 'none';
+            document.getElementById('instituteNameText').style.display = 'none';
+            document.getElementById('instituteNameValid').style.display = 'none';
+
+            document.getElementById('idCardNoText').removeAttribute('required');
+            document.getElementById('instituteNameText').removeAttribute('required');
+        }
+    };
+
+</script>
+
+
