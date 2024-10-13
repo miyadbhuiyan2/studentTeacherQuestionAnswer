@@ -29,6 +29,7 @@ namespace studentTeacherQuestionAnswer.Controllers
             var myUser = context.UserInfos.Where(x => x.EmailId == user.EmailId && x.Password == user.Password).FirstOrDefault();
             if (myUser != null) {
                 HttpContext.Session.SetString("UserSession",myUser.EmailId);
+                HttpContext.Session.SetString("UserTypeSession", myUser.UserType);
                 return RedirectToAction("Dashboard");
             }
             else
@@ -62,12 +63,13 @@ namespace studentTeacherQuestionAnswer.Controllers
             }
             return View();
         }
-
+       
         public IActionResult Dashboard()
         {
             if (HttpContext.Session.GetString("UserSession") != null)
             {
                 ViewBag.MySession = HttpContext.Session.GetString("UserSession");
+                ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
             }
             else
             {
