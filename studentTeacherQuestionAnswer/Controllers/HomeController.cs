@@ -20,6 +20,7 @@ namespace studentTeacherQuestionAnswer.Controllers
 
         public IActionResult Login()
         {
+           
             return View();
         }
 
@@ -28,8 +29,10 @@ namespace studentTeacherQuestionAnswer.Controllers
         {
             var myUser = context.UserInfos.Where(x => x.EmailId == user.EmailId && x.Password == user.Password).FirstOrDefault();
             if (myUser != null) {
-                HttpContext.Session.SetString("UserSession",myUser.EmailId);
+                HttpContext.Session.SetInt32("UserSession",myUser.UserId);
                 HttpContext.Session.SetString("UserTypeSession", myUser.UserType);
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
+                ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
                 return RedirectToAction("Dashboard");
             }
             else
@@ -63,13 +66,52 @@ namespace studentTeacherQuestionAnswer.Controllers
             }
             return View();
         }
-       
+        public IActionResult Question()
+        {
+            if (HttpContext.Session.GetInt32("UserSession") != null)
+            {
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
+                ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
+
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Question(Question q)
+        {
+            if (ModelState.IsValid)
+            {
+                q.Qby = HttpContext.Session.GetInt32("UserSession");
+                await context.Questions.AddAsync(q);
+                await context.SaveChangesAsync();
+                TempData["QSuccess"] = "Question Added Successfully";
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
         public IActionResult Dashboard()
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
+            if (HttpContext.Session.GetInt32("UserSession") != null)
             {
-                ViewBag.MySession = HttpContext.Session.GetString("UserSession");
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
                 ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
+                 var dQuestions = (
+                                  from ui in context.UserInfos
+                                  join qu in context.Questions on ui.UserId equals qu.Qby
+                                  select new
+                                  {
+                                      qID =qu.Qid,
+                                      ques=qu.Question1,
+                                      qDate=qu.Qdate,
+                                      qBy=ui.Name,
+                                      qUID=ui.UserId
+                                  }).OrderByDescending(x => x.qDate);
+                ViewBag.dQ = dQuestions;
+
             }
             else
             {
