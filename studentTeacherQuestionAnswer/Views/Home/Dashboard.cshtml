@@ -2,13 +2,14 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
+@model Answer;
 
 <h1 class="text-center">Dashboard</h1>
 <hr />
 @{  
     if (TempData["QSuccess"] != null)
     {
-        <p style="color:green;" class="text-center">@TempData["QSuccess"]</p>
+        <p style="color:green;" class="text-center">@TempData["Success"]</p>
 
     }
     foreach(var item in ViewBag.dQ)
@@ -20,26 +21,42 @@
                 <p class="text-secondary">@item.qDate</p>
                 <p>@item.ques</p>
                 <hr class="text-primary" />
-                <div class="row">
-                    <div class="col-md-6 text-center"><a>View</a></div>
+                <div class="row mb-2">
                     @if (ViewBag.MySession == item.qUID)
                     {
-                        <div class="col-md-6 text-center text-danger"><a>Delete</a></div>
+                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-primary">View</button></div>
+                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-danger">Delete</button></div>
+                    }
+                    else
+                    {
+                        <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-primary">View</button></div>
                     }
                 </div>
-                @if (ViewBag.MySessionType == "Teacher")
-                {
-                    <div class="row">
-                        <form asp-action="Login">
-                            <div class="form-group col-md-6">
-                                <input asp-for="EmailId" class="form-control" />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <input type="submit" value="Answer" class="btn btn-primary" />
-                            </div>
+                
+                    @if (ViewBag.MySessionType == "Teacher")
+                    {
+                        <form asp-action="Answer">
+                           <div class="row">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label asp-for="Answer1" class="control-label" hidden></label>
+                                        <input asp-for="Answer1" class="form-control" />
+                                        <span asp-validation-for="Answer1" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label asp-for="Afor" class="control-label" hidden></label>
+                                        <input asp-for="Afor" class="form-control"  value=@item.qID hidden>
+                                        <div class="form-group">
+                                            <input type="submit" value="Answer" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                           </div>
                         </form>
-                    </div>
-                }
+                    }
                 
             </div>
             <div class="col-md-3"></div>

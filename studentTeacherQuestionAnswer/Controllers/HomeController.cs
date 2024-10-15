@@ -23,6 +23,20 @@ namespace studentTeacherQuestionAnswer.Controllers
            
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Answer(Answer ans)
+        {
+            if (ModelState.IsValid)
+            {
+                ans.Aby = HttpContext.Session.GetInt32("UserSession");
+                await context.Answers.AddAsync(ans);
+                await context.SaveChangesAsync();
+                TempData["Success"] = "Answered Successfully";
+                return RedirectToAction("Dashboard");
+            }
+
+            return View();
+        }
 
         [HttpPost]
         public IActionResult Login(UserInfo user)
@@ -66,6 +80,10 @@ namespace studentTeacherQuestionAnswer.Controllers
             }
             return View();
         }
+        public IActionResult ViewQuestion()
+        {
+            return View();
+        }
         public IActionResult Question()
         {
             if (HttpContext.Session.GetInt32("UserSession") != null)
@@ -88,7 +106,7 @@ namespace studentTeacherQuestionAnswer.Controllers
                 q.Qby = HttpContext.Session.GetInt32("UserSession");
                 await context.Questions.AddAsync(q);
                 await context.SaveChangesAsync();
-                TempData["QSuccess"] = "Question Added Successfully";
+                TempData["Success"] = "Question Added Successfully";
                 return RedirectToAction("Dashboard");
             }
             return View();

@@ -1,0 +1,38 @@
+﻿@model studentTeacherQuestionAnswer.Models.Answer
+
+@{
+    ViewData["Title"] = "Answer";
+}
+
+<h1>Answer</h1>
+
+<h4>Answer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Answer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Answer1" class="control-label"></label>
+                <input asp-for="Answer1" class="form-control" />
+                <span asp-validation-for="Answer1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Aby" class="control-label"></label>
+                <select asp-for="Aby" class ="form-control" asp-items="ViewBag.Aby"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Afor" class="control-label"></label>
+                <select asp-for="Afor" class ="form-control" asp-items="ViewBag.Afor"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

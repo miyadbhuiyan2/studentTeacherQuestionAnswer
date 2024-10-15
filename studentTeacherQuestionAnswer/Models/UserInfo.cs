@@ -19,5 +19,9 @@ public partial class UserInfo
 
     public string? UserType { get; set; }
 
+    public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
+
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+
+    public virtual ICollection<Reply> Replies { get; set; } = new List<Reply>();
 }

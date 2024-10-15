@@ -13,5 +13,7 @@ public partial class Question
 
     public int? Qby { get; set; }
 
+    public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
+
     public virtual UserInfo? QbyNavigation { get; set; }
 }
