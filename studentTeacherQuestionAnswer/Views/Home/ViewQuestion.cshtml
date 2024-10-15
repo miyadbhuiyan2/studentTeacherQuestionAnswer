@@ -1,6 +1,59 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "ViewQuestion";
 }
+@model Answer;
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 border border-primary p-3">
+        <h5>@ViewBag.vQ.qBy</h5>
+        <p class="text-secondary">@ViewBag.vQ.qDate</p>
+        <p>@ViewBag.vQ.ques</p>
+        <hr class="text-primary"/>
+        <div class="row mb-2">
+            @if (ViewBag.MySession == ViewBag.qUID)
+            {
+                <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-danger">Delete</button></div>
+            }
+        </div>
 
-<h1>ViewQuestion</h1>
+        @if (ViewBag.MySessionType == "Teacher")
+        {
+            <form asp-action="Answer">
+                <div class="row">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label asp-for="Answer1" class="control-label" hidden></label>
+                            <input asp-for="Answer1" class="form-control" />
+                            <span asp-validation-for="Answer1" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label asp-for="Afor" class="control-label" hidden></label>
+                            <input asp-for="Afor" class="form-control" value=@ViewBag.vQ.qID hidden>
+                            <div class="form-group">
+                                <input type="submit" value="Answer" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
+        @foreach(var item in ViewBag.vA)
+        {
+            <div class="row border border-success p-3 rounded-3 m-5">
+                <div class="col-md-12">
+                    <h7 class="fw-bold">@item.aBy</h7>
+                    <p>@item.ans</p>
+                    <p class="text-secondary mb-0" style="font-size:small; text-align:end;">@item.aDate</p>
+                </div>
+            </div>
+        }
+       
+
+    </div>
+    <div class="col-md-3"></div>
+</div>
 

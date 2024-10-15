@@ -24,12 +24,12 @@
                 <div class="row mb-2">
                     @if (ViewBag.MySession == item.qUID)
                     {
-                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-primary">View</button></div>
+                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("ViewQuestion", "Home",new { id = @item.qID })'">View</button></div>
                         <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-danger">Delete</button></div>
                     }
                     else
                     {
-                        <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-primary">View</button></div>
+                        <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("ViewQuestion", "Home",new { id = @item.qID })'">View</button></div>
                     }
                 </div>
                 
@@ -41,7 +41,7 @@
                                 <div class="col-md-10">
                                     <div class="form-group">
                                         <label asp-for="Answer1" class="control-label" hidden></label>
-                                        <input asp-for="Answer1" class="form-control" />
+                                        <input asp-for="Answer1" class="form-control"/>
                                         <span asp-validation-for="Answer1" class="text-danger"></span>
                                     </div>
                                 </div>

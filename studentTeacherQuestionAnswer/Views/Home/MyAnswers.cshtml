@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewData["Title"] = "MyAnswers";
+   var t = 0;
+}
+<h1 class="text-center">My Answers</h1>
+<hr />
+
+@{
+    @foreach (var item in ViewBag.mA)
+    {
+        @if (t == item.qID) continue;
+        t = item.qID;
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 border border-primary p-3">
+                <h5>@item.qBy</h5>
+                <p class="text-secondary">@item.qDate</p>
+                <p>@item.ques</p>
+                <hr class="text-primary" />
+        
+                @if (ViewBag.MySession == item.qUID)
+                {
+                    <div class="row mb-2">
+                        <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-danger">Delete</button></div>
+                    </div>
+
+                }
+        
+    
+       
+            @foreach (var itemm in ViewBag.mA)
+            {
+                if (item.qID==itemm.aFor)
+                {
+                    <div class="row border border-success p-3 rounded-3 m-5">
+                        <div class="col-md-12">
+                            <h7 class="fw-bold">@itemm.aBy</h7>
+                            <p>@itemm.ans</p>
+                            <p class="text-secondary mb-0" style="font-size:small; text-align:end;">@itemm.aDate</p>
+                        </div>
+                    </div>
+                }
+               
+            }
+
+
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+   <br />
+}
+}

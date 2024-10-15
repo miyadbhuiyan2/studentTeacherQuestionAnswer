@@ -80,8 +80,87 @@ namespace studentTeacherQuestionAnswer.Controllers
             }
             return View();
         }
-        public IActionResult ViewQuestion()
+        public IActionResult ViewQuestion(int id)
         {
+            if (HttpContext.Session.GetInt32("UserSession") != null)
+            {
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
+                ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
+
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+            ViewBag.id = id;
+            var vQuestions = (
+                                  from ui in context.UserInfos
+                                  join qu in context.Questions on ui.UserId equals qu.Qby
+                                  where(qu.Qid == id)
+                                  select new
+                                  {
+                                      qID = qu.Qid,
+                                      ques = qu.Question1,
+                                      qDate = qu.Qdate,
+                                      qBy = ui.Name,
+                                      qUID = ui.UserId
+                                  }).FirstOrDefault();
+            ViewBag.vQ = vQuestions;
+
+            ViewBag.id = id;
+            var vAnswers = (
+                                  from ui in context.UserInfos
+                                  join ans in context.Answers on ui.UserId equals ans.Aby
+                                  where (ans.Afor == id)
+                                  select new
+                                  {
+                                      aID = ans.Aid,
+                                      ans = ans.Answer1,
+                                      aDate = ans.Adate,
+                                      aBy = ui.Name,
+                                      aUID = ui.UserId
+                                  });
+            ViewBag.vA = vAnswers;
+
+            return View();
+        }
+        public IActionResult MyAnswers()
+        {
+            if (HttpContext.Session.GetInt32("UserSession") != null)
+            {
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
+                ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
+
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+           
+            var myAnswers = (
+                                  from ui in context.UserInfos
+                                  join qu in context.Questions on ui.UserId equals qu.Qby                                   
+                                  join ans in context.Answers on qu.Qid equals ans.Afor
+                                  join uii in context.UserInfos on ans.Aby equals uii.UserId
+                                  where (ans.Aby == HttpContext.Session.GetInt32("UserSession"))
+                                  select new
+                                  {
+                                      qID = qu.Qid,
+                                      ques = qu.Question1,
+                                      qDate = qu.Qdate,
+                                      qBy = ui.Name,
+                                      qUID = ui.UserId,
+
+                                      aID = ans.Aid,
+                                      ans = ans.Answer1,
+                                      aDate = ans.Adate,
+                                      aFor = ans.Afor,
+                                      aBy = uii.Name,
+                                      aUID = uii.UserId
+                                  });
+            ViewBag.mA = myAnswers;
+            ViewBag.mAA = myAnswers;
+
             return View();
         }
         public IActionResult Question()
