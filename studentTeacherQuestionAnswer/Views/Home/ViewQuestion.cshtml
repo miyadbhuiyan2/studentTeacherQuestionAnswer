@@ -11,9 +11,9 @@
         <p>@ViewBag.vQ.ques</p>
         <hr class="text-primary"/>
         <div class="row mb-2">
-            @if (ViewBag.MySession == ViewBag.qUID)
+            @if (ViewBag.MySession == ViewBag.vQ.qUID || ViewBag.MySessionType=="Moderator")
             {
-                <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-danger">Delete</button></div>
+                <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-danger" onclick="location.href='@Url.Action("DeleteQuestion", "Home",new { id = ViewBag.qID })'">Delete</button></div>
             }
         </div>
 

@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "MyQuestions";
+}
+
+<h1 class="text-center">My Questions</h1>
+<hr />
+@{
+    if (TempData["QSuccess"] != null)
+    {
+        <p style="color:green;" class="text-center">@TempData["Success"]</p>
+
+    }
+    foreach (var item in ViewBag.mQ)
+    {
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 border border-primary p-3">
+                <h5>@item.qBy</h5>
+                <p class="text-secondary">@item.qDate</p>
+                <p>@item.ques</p>
+                <hr class="text-primary" />
+                <div class="row mb-2">
+                    @if (ViewBag.MySession == item.qUID)
+                    {
+                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("ViewQuestion", "Home",new { id = @item.qID })'">View</button></div>
+                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-danger" onclick="location.href='@Url.Action("DeleteQuestion", "Home",new { id = @item.qID })'">Delete</button></div>
+                    }
+                    else
+                    {
+                        <div class="col-md-12 text-center"><button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("ViewQuestion", "Home",new { id = @item.qID })'">View</button></div>
+                    }
+                </div>
+
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <br />
+    }
+}
+
+
+
+

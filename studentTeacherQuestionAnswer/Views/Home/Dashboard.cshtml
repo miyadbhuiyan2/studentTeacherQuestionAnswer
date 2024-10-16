@@ -7,10 +7,14 @@
 <h1 class="text-center">Dashboard</h1>
 <hr />
 @{  
-    if (TempData["QSuccess"] != null)
+    if (TempData["Success"] != null)
     {
         <p style="color:green;" class="text-center">@TempData["Success"]</p>
 
+    }
+    else if (TempData["Fail"] != null)
+    {
+        <p style="color:red;" class="text-center">@TempData["Fail"]</p>
     }
     foreach(var item in ViewBag.dQ)
     {
@@ -22,10 +26,10 @@
                 <p>@item.ques</p>
                 <hr class="text-primary" />
                 <div class="row mb-2">
-                    @if (ViewBag.MySession == item.qUID)
+                    @if (ViewBag.MySession == item.qUID || ViewBag.MySessionType == "Moderator")
                     {
                         <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("ViewQuestion", "Home",new { id = @item.qID })'">View</button></div>
-                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-danger">Delete</button></div>
+                        <div class="col-md-6 text-center"><button type="button" class="btn btn-outline-danger" onclick="location.href='@Url.Action("DeleteQuestion", "Home",new { id = @item.qID })'">Delete</button></div>
                     }
                     else
                     {

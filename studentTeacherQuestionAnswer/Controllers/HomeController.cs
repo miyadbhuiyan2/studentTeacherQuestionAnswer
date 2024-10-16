@@ -124,6 +124,70 @@ namespace studentTeacherQuestionAnswer.Controllers
 
             return View();
         }
+        public IActionResult DeleteQuestion(int id)
+        {
+            if (HttpContext.Session.GetInt32("UserSession") != null)
+            {
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
+                ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
+
+                var delQuestion = (
+                                 from ans in context.Answers
+                                 join qu in context.Questions on ans.Afor equals qu.Qid
+                                 where (qu.Qid == id)
+                                 select new
+                                 {
+                                     aID = ans.Aid
+                                 }).FirstOrDefault();
+
+                if(delQuestion==null)
+                {
+                    context.Remove(context.Questions.Single(a => a.Qid == id));
+                    context.SaveChanges();
+                    TempData["Success"] = "Question Deleted Successfully";
+                    return RedirectToAction("Dashboard");
+                }
+                else
+                {
+                    TempData["Fail"] = "Question Delete Failed";
+                    return RedirectToAction("Dashboard");
+                }
+                
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+            
+
+        }
+        public IActionResult MyQuestions()
+        {
+            if (HttpContext.Session.GetInt32("UserSession") != null)
+            {
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
+                ViewBag.MySessionType = HttpContext.Session.GetString("UserTypeSession");
+                var myQuestions = (
+                                 from ui in context.UserInfos
+                                 join qu in context.Questions on ui.UserId equals qu.Qby
+                                 where (qu.Qby == HttpContext.Session.GetInt32("UserSession"))
+                                 select new
+                                 {
+                                     qID = qu.Qid,
+                                     ques = qu.Question1,
+                                     qDate = qu.Qdate,
+                                     qBy = ui.Name,
+                                     qUID = ui.UserId
+                                 }).OrderByDescending(x => x.qDate);
+                ViewBag.mQ = myQuestions;
+
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
         public IActionResult MyAnswers()
         {
             if (HttpContext.Session.GetInt32("UserSession") != null)
@@ -136,10 +200,10 @@ namespace studentTeacherQuestionAnswer.Controllers
             {
                 return RedirectToAction("Login");
             }
-           
+
             var myAnswers = (
                                   from ui in context.UserInfos
-                                  join qu in context.Questions on ui.UserId equals qu.Qby                                   
+                                  join qu in context.Questions on ui.UserId equals qu.Qby
                                   join ans in context.Answers on qu.Qid equals ans.Afor
                                   join uii in context.UserInfos on ans.Aby equals uii.UserId
                                   where (ans.Aby == HttpContext.Session.GetInt32("UserSession"))
@@ -159,7 +223,6 @@ namespace studentTeacherQuestionAnswer.Controllers
                                       aUID = uii.UserId
                                   });
             ViewBag.mA = myAnswers;
-            ViewBag.mAA = myAnswers;
 
             return View();
         }
