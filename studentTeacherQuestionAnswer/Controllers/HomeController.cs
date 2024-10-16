@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using studentTeacherQuestionAnswer.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using System.Security.Cryptography;
 
 namespace studentTeacherQuestionAnswer.Controllers
 {
@@ -12,6 +13,7 @@ namespace studentTeacherQuestionAnswer.Controllers
         public HomeController(StqaContext context)
         {
             this.context = context;
+
         }
         public IActionResult Index()
         {
@@ -36,6 +38,29 @@ namespace studentTeacherQuestionAnswer.Controllers
             }
 
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Reply(IFormCollection form)
+        {
+
+            if (HttpContext.Session.GetInt32("UserSession") != null)
+            {
+                
+                     Reply rep = new Reply();
+                     rep.Rby = HttpContext.Session.GetInt32("UserSession");
+                     rep.Reply1 = form["Reply"];
+                     rep.Rfor = Int32.Parse(form["ReplyFor"]);
+                     await context.Replies.AddAsync(rep);
+                     await context.SaveChangesAsync();
+                     TempData["Success"] = "Replied Successfully";
+                     return RedirectToAction("Dashboard");
+
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+
         }
 
         [HttpPost]
@@ -107,7 +132,6 @@ namespace studentTeacherQuestionAnswer.Controllers
                                   }).FirstOrDefault();
             ViewBag.vQ = vQuestions;
 
-            ViewBag.id = id;
             var vAnswers = (
                                   from ui in context.UserInfos
                                   join ans in context.Answers on ui.UserId equals ans.Aby
@@ -121,6 +145,22 @@ namespace studentTeacherQuestionAnswer.Controllers
                                       aUID = ui.UserId
                                   });
             ViewBag.vA = vAnswers;
+
+            var vReplies = (
+                                  from  ans in context.Answers 
+                                  join rep in context.Replies on ans.Aid equals rep.Rfor
+                                  join ui in context.UserInfos on rep.Rby equals ui.UserId
+                                  where (ans.Afor == id)
+                                  select new
+                                  {
+                                      rID = rep.Rid,
+                                      rep = rep.Reply1,
+                                      rDate = rep.Rdate,
+                                      rFor = rep.Rfor,
+                                      rBy = ui.Name,
+                                      rUID = ui.UserId
+                                  });
+            ViewBag.vR = vReplies;
 
             return View();
         }
@@ -201,7 +241,7 @@ namespace studentTeacherQuestionAnswer.Controllers
                 return RedirectToAction("Login");
             }
 
-            var myAnswers = (
+            var myAnsweredQuestions = (
                                   from ui in context.UserInfos
                                   join qu in context.Questions on ui.UserId equals qu.Qby
                                   join ans in context.Answers on qu.Qid equals ans.Afor
@@ -213,16 +253,41 @@ namespace studentTeacherQuestionAnswer.Controllers
                                       ques = qu.Question1,
                                       qDate = qu.Qdate,
                                       qBy = ui.Name,
-                                      qUID = ui.UserId,
-
-                                      aID = ans.Aid,
-                                      ans = ans.Answer1,
-                                      aDate = ans.Adate,
-                                      aFor = ans.Afor,
-                                      aBy = uii.Name,
-                                      aUID = uii.UserId
+                                      qUID = ui.UserId
                                   });
+            ViewBag.mAQ = myAnsweredQuestions;
+
+            var myAnswers = (
+                                 from ans in context.Answers 
+                                 join uii in context.UserInfos on ans.Aby equals uii.UserId
+                                 where (ans.Aby == HttpContext.Session.GetInt32("UserSession"))
+                                 select new
+                                 {
+                                     aID = ans.Aid,
+                                     ans = ans.Answer1,
+                                     aDate = ans.Adate,
+                                     aFor = ans.Afor,
+                                     aBy = uii.Name,
+                                     aUID = uii.UserId
+                                 });
             ViewBag.mA = myAnswers;
+
+            var myReplies = (
+                                 from rep in context.Replies
+                                 join uii in context.UserInfos on rep.Rby equals uii.UserId
+                                 where (rep.Rby == HttpContext.Session.GetInt32("UserSession"))
+                                 select new
+                                 {
+                                     rID = rep.Rid,
+                                     rep = rep.Reply1,
+                                     rDate = rep.Rdate,
+                                     rFor=rep.Rfor,
+                                     rBy = uii.Name,
+                                     rUID = uii.UserId
+                                 });
+            ViewBag.mR = myReplies;
+
+
 
             return View();
         }

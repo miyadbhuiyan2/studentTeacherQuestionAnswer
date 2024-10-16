@@ -1,8 +1,10 @@
 ﻿
 @{
     ViewData["Title"] = "ViewQuestion";
+    var tt = 0;
 }
 @model Answer;
+
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6 border border-primary p-3">
@@ -43,15 +45,45 @@
         }
         @foreach(var item in ViewBag.vA)
         {
-            <div class="row border border-success p-3 rounded-3 m-5">
+           
+            <div class="row border border-success p-3 rounded-3 m-3">
                 <div class="col-md-12">
                     <h7 class="fw-bold">@item.aBy</h7>
                     <p>@item.ans</p>
                     <p class="text-secondary mb-0" style="font-size:small; text-align:end;">@item.aDate</p>
                 </div>
             </div>
-        }
-       
+            @foreach (var itemm in ViewBag.vR)
+            {
+                @if (item.aID == itemm.rFor)
+                {
+                    <div class="row border border-success p-3 rounded-3" style="margin-left:7rem;margin-top:1rem;margin-bottom:1rem;margin-right:1rem;">
+                        <div class="col-md-12">
+                        <h7 class="fw-bold">@itemm.rBy</h7>
+                        <p>@itemm.rep</p>
+                        <p class="text-secondary mb-0" style="font-size:small; text-align:end;">@itemm.rDate</p>
+                    </div>
+                </div>
+                }
+
+            }
+            @if (ViewBag.MySessionType == "Teacher" || ViewBag.MySession == ViewBag.vQ.qUID)
+            {
+                @using (Html.BeginForm("Reply", "Home", FormMethod.Post))
+                {
+                    <div class="row" style="margin-left:7rem;margin-top:1rem;margin-bottom:1rem;margin-right:1rem;">
+                        <div class="col-md-10">                         
+                                <input type="text" class="form-control" name="Reply"/>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="ReplyFor" value=@item.aID hidden>
+                            <input type="submit" value="Reply" class="btn btn-primary"/>   
+                        </div>
+                    </div>
+                
+                }   
+            }
+        }      
 
     </div>
     <div class="col-md-3"></div>
