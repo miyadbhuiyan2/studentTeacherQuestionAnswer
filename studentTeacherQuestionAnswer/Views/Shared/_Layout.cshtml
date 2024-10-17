@@ -34,7 +34,7 @@
                                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="MyQuestions" id="myQuestion">My Questions</a>
                                     </li>
                                 }
-                                else
+                                else if (ViewBag.MySessionType == "Teacher")
                                 {
 
                                     <li class="nav-item">
